@@ -1,5 +1,7 @@
 package com.gusparis.monthpicker.builder;
 
+import android.widget.NumberPicker;
+
 class YearNumberPicker extends MonthYearNumberPicker {
 
   private static final int DEFAULT_SIZE = 204;
@@ -16,6 +18,7 @@ class YearNumberPicker extends MonthYearNumberPicker {
     int year = props.value().getYear();
     yearPicker.setMinValue(year - DEFAULT_SIZE);
     yearPicker.setMaxValue(year + DEFAULT_SIZE);
+    yearPicker.setFormatter(new JpYear());
     yearPicker.setValue(year);
     return this;
   }
@@ -35,5 +38,12 @@ class YearNumberPicker extends MonthYearNumberPicker {
   @Override
   int getValue() {
     return yearPicker.getValue();
+  }
+
+  private static class JpYear implements NumberPicker.Formatter {
+    @Override
+    public String format(int i) {
+      return String.format("%d年", i);
+    }
   }
 }

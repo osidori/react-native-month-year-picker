@@ -89,8 +89,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
 - (void)setSelectedRows:(BOOL)animated {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self selectRow:selectedMonthRow inComponent:0 animated:animated];
-        [self selectRow:selectedYearRow inComponent:1 animated:animated];
+        [self selectRow:selectedYearRow inComponent:0 animated:animated];
+        [self selectRow:selectedMonthRow inComponent:1 animated:animated];
     });
 }
 
@@ -104,10 +104,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 - (NSInteger)pickerView:(nonnull UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
     switch (component) {
         case 0:
-            return DEFAULT_MONTH_SIZE;
-        case 1:
             return (DEFAULT_YEAR_SIZE * 2) + 1;
             break;
+        case 1:
+            return DEFAULT_MONTH_SIZE;
         default:
             return 0;
     }
@@ -117,13 +117,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 // row titles
 - (NSString *)pickerView:(nonnull UIPickerView *) pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     switch (component) {
-        case 0: {
+        case 0:
+            return [NSString stringWithFormat:@"%@年", years[row]];
+        case 1: {
             NSDateComponents *comps = [[NSDateComponents alloc] init];
             [comps setMonth: row % 12];
             return [NSString stringWithFormat:@"%@", [df stringFromDate:[gregorian dateFromComponents:comps]]];
         }
-        case 1:
-            return [NSString stringWithFormat:@"%@", years[row]];
         default:
             return nil;
     }
@@ -156,11 +156,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
       didSelectRow:(NSInteger)row inComponent:(__unused NSInteger)component {
     switch (component) {
         case 0:
-            [self getSelectedMonthRow:row];
-            break;
-        case 1:
             [self getSelectedYearRow:row];
             [self getSelectedMonthRow:selectedMonthRow];
+            break;
+        case 1:
+            [self getSelectedMonthRow:row];
             break;
         default:
             return;
